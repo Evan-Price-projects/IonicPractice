@@ -20,6 +20,7 @@ export class RegisterPage {
     this.user.email = form.value['email'];
     this.user.password = form.value['password'];
     this.auth.setUser(this.user).subscribe();
+    this.router.navigate(['/tabs/login'])
   }
 
 }
