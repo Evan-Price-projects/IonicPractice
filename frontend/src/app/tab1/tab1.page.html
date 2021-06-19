@@ -1,0 +1,30 @@
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col></ion-col>
+      <ion-col>
+        <div *ngIf="!photo">
+          <ion-fab slot="fixed">
+            <ion-fab-button (click)="addPhotoToGallery()">
+              <ion-icon name="camera"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </div>
+        <div *ngIf="photo">
+          <ion-thumbnail slot="photo" >
+            <ion-img [src]='photo.webPath' ></ion-img>
+          </ion-thumbnail>
+          <ion-label>hello</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Take a Picture</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-explore-container name="Tab 1 page"></app-explore-container>
+</ion-content>
