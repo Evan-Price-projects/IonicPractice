@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from '../login/login.component';
 import { LoginService } from '../services/login.service';
 import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent
-  },
   {
     path: 'tabs',
     component: TabsPage,
@@ -27,8 +22,12 @@ const routes: Routes = [
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
       },
       {
-        path: 'login',
+        path: 'register',
         loadChildren: () => import('../auth/register/register.module').then(m => m.RegisterPageModule)
+      },
+      {
+        path: 'login',
+        loadChildren: () => import('../auth/login/login.module').then(m => m.LoginPageModule)
       },
       {
         path: '',
