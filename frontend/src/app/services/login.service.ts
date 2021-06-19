@@ -1,27 +1,29 @@
-import { HttpClient, HttpHandler } from '@angular/common/http';
+import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
+import { User } from '../db/User';
 
-import { ApiService } from './api.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService /* implements CanActivate */ {
   constructor(
-    private router: Router,
-    private authenticationService: ApiService
+    private http: HttpClient
   ) { }
 
-/*   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    console.log('cu', currentUser)
-    if (currentUser) {
-      // logged in so return true
-      return true;
-    }
+  getUser():Observable<User> {
+    return this.http.get<User>(`/api/login/new`)
+  }
 
-    // not logged in so redirect to login page with the return url
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    return false;
-  } */
+  setUser(user: User) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'body': JSON.stringify(user)
+      })
+    };
+    return this.http.post<User[]>(`/api/login`,{'body': JSON.stringify(user)}, httpOptions)
+  }
 }
