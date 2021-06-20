@@ -14,6 +14,7 @@ class User {
   name?: string;
   password!: string;
   email!: string;
+  photo?: any;
 }
 const withDB = async (operations:any, res:any) => {
   try {
@@ -40,33 +41,50 @@ app.get('/api/register/new', async (req, res) => {
         res.status(200).json(x);
     },res)
 })
+
 app.get('/api/login/:id', async (req, res) => {
   withDB(async (db:Db) => {
-    const user = await db.collection('user').findOne({ email: req.params.id })
-    console.log(user,req.params.id)
+    const user = await db.collection('user').findOne({ name: req.params.id })
+    console.log('user',user)
       res.status(200).json(user);
   },res)
 })
+
+app.get('/api/:id', async (req, res) => {
+  console.log(req.params.id)
+  withDB(async (db:Db) => {
+      const updatedArticleInfo = await db.collection('user').find({ name: req.params.id }).toArray();
+      console.log(updatedArticleInfo);
+      res.status(200).json(updatedArticleInfo)
+  },res)
+})
+
+app.put('/api/:id', async (req, res) => {
+  console.log(req.body, req)
+  var login = req.body;
+/*   withDB(async (db:Db) => {
+      var updatedArticleInfo = await db.collection('user').findOneAndUpdate({ _id: login['_id'] },{})
+      res.status(200).json(updatedArticleInfo)
+  },res) */
+})
+
 app.post('/api/register', async (req, res) => {
-  var login = req.body.user;
+  var login:User = req.body.user;
   console.log(login)
   const salt = await bcrypt.genSalt(10);
   login.password = await bcrypt .hash(login.password, salt);
   withDB(async (db:Db) => {
       db.collection('user').insertOne(login);
-      const updatedArticleInfo = await db.collection('user').findOne({ _id: login['_id'] })
+      const updatedArticleInfo = await db.collection('user').findOne({ name: login['name'] })
       res.status(200).json(updatedArticleInfo)
   },res)
 })
-app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
-});
 
 app.post('/api/login', async (req, res)=>{
   const body:User = req.body.user;
   console.log(body)
   withDB(async (db:Db) => {
-  const user = await db.collection('user').findOne({ email: body.email });
+  const user = await db.collection('user').findOne({ name: body.name });
   if (user) {
     // check user password with hashed password stored in the database
     const validPassword = await bcrypt.compare(body.password, user.password);
@@ -90,3 +108,7 @@ app.use(function (req, res, next) {
   next();
   });
 
+  app.listen(PORT, () => {
+    console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+  });
+  

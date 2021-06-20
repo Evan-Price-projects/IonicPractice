@@ -15,23 +15,26 @@ export class LoginPage {
   errorMessage = '';
   user?: User;;
   roles: string[] = [];
+
   constructor(private auth: LoginService, private router: Router,private tokenStorage: TokenstorageService) {
     if (this.tokenStorage.getToken()) {
       LoginPage.isLoggedIn = true;
       this.user = this.tokenStorage.getUser();
+      this.auth.getUserByEmail(this.user.name).subscribe((user)=>this.user=user);
+
     }
   }
   loginUser(form) {
     let user = new User();
-    user.email = form.value['email'];
+    user.name = form.value['name'];
     user.password = form.value['password'];
     this.auth.login(user).subscribe((data) => {
       this.tokenStorage.saveToken(data['accessToken']);
-      this.tokenStorage.saveUser(data['body']);
 
       LoginPage.isLoginFailed = false;
       LoginPage.isLoggedIn = true;
-      this.auth.getUserByEmail(user.email).subscribe((user)=>this.user=user);
+      this.auth.getUserByEmail(user.name).subscribe((user)=>this.user=user);
+      this.tokenStorage.saveUser(this.user);
       LoginPage.reloadPage();
     },
       err => {

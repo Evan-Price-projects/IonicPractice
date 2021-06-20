@@ -8,10 +8,9 @@ import { TokenstorageService } from '../services/tokenstorage.service';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss']
 })
-export class TabsPage implements OnInit {
+export class TabsPage  {
   user?: User
-  constructor(private tokenStorage: TokenstorageService){}
-  ngOnInit(): void {
+  constructor(private tokenStorage: TokenstorageService){
     if (this.tokenStorage.getToken()) {
       LoginPage.isLoggedIn = true;
       this.user = this.tokenStorage.getUser();

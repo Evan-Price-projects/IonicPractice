@@ -12,7 +12,7 @@ export class RegisterPage {
   user?: User;
 
   constructor(private auth: LoginService, private  router:  Router) { 
-    this.auth.getUser().subscribe((param) => this.user = param);
+    this.auth.getNewUser().subscribe((param) => this.user = param);
   }
   createUser (form){
     if(form.value['password'] != form.value['confirm'])return;

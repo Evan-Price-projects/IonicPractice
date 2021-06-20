@@ -28,11 +28,11 @@ export class LoginService implements CanActivate {
     }
   }
   
-  getUser():Observable<User> {
+  getNewUser():Observable<User> {
     return this.http.get<User>(`/api/register/new`)
   }
-  getUserByEmail(email: string):Observable<User> {
-    return this.http.get<User>(`/api/login/${email}`)
+  getUserByEmail(_id: string):Observable<User> {
+    return this.http.get<User>(`/api/login/${_id}`)
   }
   login(user: User){
     return this.http.post(`api/login`, {user}, httpOptions)

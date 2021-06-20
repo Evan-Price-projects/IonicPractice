@@ -4,16 +4,16 @@
       <ion-col></ion-col>
       <ion-col></ion-col>
       <ion-col>
-        <div *ngIf="!photo">
+        <div *ngIf="!user || (user && !user.photo)">
           <ion-fab slot="fixed">
             <ion-fab-button (click)="addPhotoToGallery()">
               <ion-icon name="camera"></ion-icon>
             </ion-fab-button>
           </ion-fab>
         </div>
-        <div *ngIf="photo">
-          <ion-thumbnail slot="photo" >
-            <ion-img [src]='photo.webPath' ></ion-img>
+        <div *ngIf="user && user.photo">
+          <ion-thumbnail slot="user.photo" >
+            <ion-img [src]='user.photo' ></ion-img>
           </ion-thumbnail>
           <ion-label>hello</ion-label>
         </div>
