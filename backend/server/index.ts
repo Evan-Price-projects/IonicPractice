@@ -2,6 +2,8 @@ import express from 'express';
 import bcrypt from "bcrypt";
 import { MongoClient, Db } from 'mongodb';
 import { find } from 'shelljs';
+import jwt from 'jsonwebtoken';
+import { access } from 'fs-extra';
 
 // rest of the code remains same
 const app = express();
@@ -38,7 +40,13 @@ app.get('/api/register/new', async (req, res) => {
         res.status(200).json(x);
     },res)
 })
-
+app.get('/api/login/:id', async (req, res) => {
+  withDB(async (db:Db) => {
+    const user = await db.collection('user').findOne({ email: req.params.id })
+    console.log(user,req.params.id)
+      res.status(200).json(user);
+  },res)
+})
 app.post('/api/register', async (req, res) => {
   var login = req.body.user;
   console.log(login)
@@ -63,7 +71,8 @@ app.post('/api/login', async (req, res)=>{
     // check user password with hashed password stored in the database
     const validPassword = await bcrypt.compare(body.password, user.password);
     if (validPassword) {
-      res.status(200).json({ message: "Valid password" });
+      const accessToken = jwt.sign({ email: user.email,  name: user.name }, 'secret');
+      res.status(200).json({accessToken,body});
     } else {
       res.status(400).json({ error: "Invalid Password" });
     }

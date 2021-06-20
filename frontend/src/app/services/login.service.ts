@@ -1,7 +1,9 @@
 import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CanActivate } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../db/User';
+import { TokenstorageService } from './tokenstorage.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -12,16 +14,25 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService /* implements CanActivate */ {
+export class LoginService implements CanActivate {
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private tokenStorage: TokenstorageService
   ) { }
 
+  canActivate(){
+    if(this.tokenStorage.getToken()){return true;
+    }
+    else{
+      return false;
+    }
+  }
+  
   getUser():Observable<User> {
     return this.http.get<User>(`/api/register/new`)
   }
-  getLogin():Observable<User> {
-    return this.http.get<User>(`/api/login/new`)
+  getUserByEmail(email: string):Observable<User> {
+    return this.http.get<User>(`/api/login/${email}`)
   }
   login(user: User){
     return this.http.post(`api/login`, {user}, httpOptions)
